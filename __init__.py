@@ -42,7 +42,7 @@ driver.find_element_by_xpath('//*[@id="d_srch_form"]/div[2]/button/span/span').c
 
 html = driver.page_source # 드라이버 현재 페이지의 html 정보 가져오기
 requests.get(url)
-soup = BeautifulSoup(html, 'lxml')
+soup = BeautifulSoup(html, 'html.parser')
 
 soup.find_all('div', attrs={'class': 'ellipsis rank01'})
 [title.find('a').get_text() for title in soup.find_all('div', attrs={'class': 'ellipsis rank01'})]
@@ -102,7 +102,7 @@ while period < 4:
 
         # html 정보 가져오기
         html = driver.get(page_source)
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, 'html.parser')
 
         # 노래 제목 가져오기
         song_list = [title.find('a').get_text() for title in soup.find_all('div', attrs={'class': 'ellipsis rank01'})]
