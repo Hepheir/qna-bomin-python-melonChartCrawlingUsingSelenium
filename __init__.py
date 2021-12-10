@@ -129,4 +129,4 @@ while period < 4:
     result_df = pd.concat([result_df, df], ignore_index=True)
     period += 2
 
-    result_df.to_csv('롤롤.csv', encoding='ANSI')
+    result_df.to_csv('롤롤.csv', encoding='utf-8')
