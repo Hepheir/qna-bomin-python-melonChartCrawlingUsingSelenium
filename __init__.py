@@ -100,8 +100,7 @@ while period < 4:
     time.sleep(2)
 
     # html 정보 가져오기
-    html = driver.get(page_source)
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     # 노래 제목 가져오기
     song_list = [title.find('a').get_text() for title in soup.find_all('div', attrs={'class': 'ellipsis rank01'})]
