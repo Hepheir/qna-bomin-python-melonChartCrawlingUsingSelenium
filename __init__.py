@@ -102,25 +102,30 @@ while period < 4:
     # html 정보 가져오기
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-    # 노래 제목 가져오기
-    song_list = [title.find('a').get_text() for title in soup.find_all('div', attrs={'class': 'ellipsis rank01'})]
+    # 검색 대상이 되는 년도, 월 가져오기
+    year = soup.find_all('span', attrs={'class':'datelk'})[0].get_text()
+    month = soup.find_all('span', attrs={'class':'datelk'})[1].get_text()
 
-    # 가수명 가져오기
-    singer_list = [ singer.get_text() for singer in soup.find_all('span', attrs={'class':'checkEllipsis'}) ]
+    # 차트의 각 행을 가져오기
+    rows = soup.find_all('tr', attrs={'class': 'lst50'})
 
-    # 순위 만들기
-    rank_list = []
-    for i in range(len(song)):
-        rank_list.append(i+1)
-    # 년
-    year_list = list(repeat(soup.find_all('span', attrs={'class':'datelk'})[0].get_text(), len(song_list)))
+    ranks = []
+    titles = []
+    artists = []
 
-    # 월
-    month = list(repeat(soup.find_all('span', attrs={'class':'datelk'})[1].get_text(), len(song))) # 08로 표기되어 안깔끔
-    month_list = list(repeat(month, len(song_list)))
+    for row in rows:
+        ranks.append(row.find('span', attrs={'class': 'rank'}).get_text())
+        titles.append(row.find('div', attrs={'class': 'ellipsis rank01'}).get_text())
+        artists.append(row.find('div', attrs={'class': 'ellipsis rank02'}).get_text())
 
     # 데이터프레임 생성
-    df = pd.DataFrame({'연도':year_list,'월':month_list,'순위':rank_list,'곡명':song_list,'가수명':singer_list})
+    df = pd.DataFrame({
+        '연도': list(repeat(year, len(rows))),
+        '월':list(repeat(month, len(rows))),
+        '순위': ranks,
+        '곡명': titles,
+        '가수명': artists
+    })
     result_df = pd.concat([result_df, df], ignore_index=True)
     period += 2
 
